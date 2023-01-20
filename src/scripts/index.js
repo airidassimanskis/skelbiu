@@ -1,48 +1,64 @@
 // Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"
-import { firebaseConfig } from "./config/firebase.js"
+import { firebaseConfig } from "./modules/firebase.js"
 import { getDatabase, set, update, ref } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
-import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut
-}
-    from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"
+import createNavBar from "./modules/navbar.js"
+import addAdFields from "./modules/add_ad.js"
+import modal from "./modules/modal.js"
 
 const app = initializeApp(firebaseConfig)
 const database = getDatabase(app)
 const auth = getAuth()
 // Firebase end
 
-let container = document.querySelector(".container")
+
+let container = document.querySelector(".main-container")
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
         //istrinti register
         document.querySelector(".login-register-form").remove()
 
+        modal("test", "test")
 
-        // Sign out func
         const lastLoginAt = new Date().toISOString()
         update(ref(database, "users/" + user.uid), {
             last_seen: `${lastLoginAt}`
         })
 
-        let signOutFunc = () => {
-            signOut(auth).then(() => {
-                window.location.reload();
-                console.log("User successfully logged out")
-            }).catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                alert(errorMessage)
-            });
-        }
-        document.getElementById("signOut").addEventListener("click", signOutFunc)
+        createNavBar()
+        addAdFields()
+
+
+        console.log(user.email)
+        console.log(user.uid)
+
+        // // Sign out func
+        // const signOutBtn = document.createElement("button")
+        // signOutBtn.textContent = "Sign Out"
+        // signOutBtn.classList = "signOut"
+
+        // const lastLoginAt = new Date().toISOString()
+        // update(ref(database, "users/" + user.uid), {
+        //     last_seen: `${lastLoginAt}`
+        // })
+
+        // let signOutFunc = () => {
+        //     signOut(auth).then(() => {
+        //         window.location.reload();
+        //         console.log("User successfully logged out")
+        //     }).catch((error) => {
+        //         const errorCode = error.code;
+        //         const errorMessage = error.message;
+        //         alert(errorMessage)
+        //     });
+        // }
+        // container.appendChild(signOutBtn)
+        // signOutBtn.addEventListener("click", signOutFunc)
 
     } else {
+
         // rodyti register
         document.querySelector(".login-register-form").style.visibility = "visible";
 
@@ -53,12 +69,12 @@ onAuthStateChanged(auth, (user) => {
             const email = document.getElementById("register_email").value
             const phone = document.getElementById("register_phone").value
             const password = document.getElementById("register_password").value
-        
+
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     // signed in
                     const user = userCredential.user
-        
+
                     const createdAt = new Date().toISOString()
                     set(ref(database, "users/" + user.uid), {
                         role: "user",
@@ -68,7 +84,7 @@ onAuthStateChanged(auth, (user) => {
                         phone: phone,
                         created_at: `${createdAt}`
                     })
-        
+
                     console.log("New user successfully registered")
                 })
                 .catch((error) => {
@@ -77,8 +93,9 @@ onAuthStateChanged(auth, (user) => {
                     alert(errorMessage)
                 })
         }
+        // document.getElementById("register_password").onkeydown = registerNewUserFunc
         document.getElementById("signUp").addEventListener("click", registerNewUserFunc)
-        
+
         // Login func
         let signInFunc = () => {
 
@@ -103,7 +120,8 @@ onAuthStateChanged(auth, (user) => {
                     alert(errorMessage)
                 });
         }
-
+        // document.getElementById("login_email").onkeydown = signInFunc
+        // document.getElementById("login_password").onkeydown = signInFunc
         document.getElementById("signIn").addEventListener("click", signInFunc)
     }
 })
