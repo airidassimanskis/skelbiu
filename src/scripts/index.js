@@ -63,13 +63,16 @@ onAuthStateChanged(auth, (user) => {
                     alertify.success("Successfully registered.")
                 })
                 .catch((error) => {
-                    const errorCode = error.errorCode
                     const errorMessage = error.message
+                    console.log(errorMessage)
                     alertify.error("Registration unsuccessful. Please check if the information is correct.")
                 })
         }
-        // document.getElementById("register_password").onkeydown = registerNewUserFunc
+
         document.getElementById("signUp").addEventListener("click", registerNewUserFunc)
+        document.querySelectorAll(".register_input").forEach(inp => inp.addEventListener("keydown", (e) => {
+            if (e.code === "Enter") {registerNewUserFunc()}
+        }))
 
         // Login func
         let signInFunc = () => {
@@ -90,14 +93,15 @@ onAuthStateChanged(auth, (user) => {
                     alertify.success("Successfully logged in.")
                 })
                 .catch((error) => {
-                    const errorCode = error.code;
                     const errorMessage = error.message;
                     alertify.error("Login unsuccessful. Please check if the information is correct.")
                 });
         }
-        // document.getElementById("login_email").onkeydown = signInFunc
-        // document.getElementById("login_password").onkeydown = signInFunc
+
         document.getElementById("signIn").addEventListener("click", signInFunc)
+        document.querySelectorAll(".login_input").forEach(inp => inp.addEventListener("keydown", (e) => {
+            if (e.code === "Enter") {signInFunc()}
+        }))
     }
 })
 

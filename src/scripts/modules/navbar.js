@@ -20,7 +20,6 @@ function createNavBar() {
 
             alertify.success("Successfully logged out.") // NEVEIKIA KAZKODEL
         }).catch((error) => {
-            const errorCode = error.code;
             const errorMessage = error.message;
             alertify.error("Logout unsuccessful. If this issue persists please contact an Admin.")
         });
