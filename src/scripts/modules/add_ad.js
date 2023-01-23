@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"
 import { firebaseConfig } from "./firebase.js"
-import { getDatabase, set, update, ref } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+import { getDatabase, set, update, ref, get } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"
 
 const app = initializeApp(firebaseConfig)
@@ -48,19 +48,18 @@ function addAdFields() {
 
 
     let ad_price = document.createElement("input")
+    ad_price.type = "number"
     ad_price.classList = "form-control form-control-lg m-3"
-    ad_price.placeholder = "$ | kad butu kaireje toks skirtukas padaryk ir mazesni size inputo"
-    
+    ad_price.placeholder = "$ 0.00"
+
     let ad_phone = document.createElement("input")
     ad_phone.classList = "form-control form-control-lg m-3"
-    ad_phone.placeholder = "is database idek phone num ir disabled padaryk"
-    
+    ad_phone.placeholder = "+1234567890"
+
     let ad_email = document.createElement("input")
     ad_email.classList = "form-control form-control-lg m-3"
-    ad_email.placeholder = "is database idek email ir disabled padaryk"
-
-
-
+    ad_email.placeholder = `${auth.currentUser.email}`
+    ad_email.disabled = true
 
     let ad_submit = document.createElement("button")
     ad_submit.classList = "btn btn-success btn-lg form-control form-control-lg m-3"
@@ -79,6 +78,25 @@ function addAdFields() {
     ad_form.appendChild(ad_submit)
 
     container.appendChild(ad_form)
+
+
+    ad_submit.addEventListener("click", AddTheAdToTheBagdad)
+
+    function AddTheAdToTheBagdad(){
+        const createdAt = new Date().toISOString()
+        set(ref(database, "skelbimai/" + auth.currentUser.uid), {
+            title: ad_title.value,
+            description: ad_description.value,
+            city: ad_city_select.value,
+            price: ad_price.value,
+            phone: ad_phone.value,
+            email: ad_email.placeholder,
+            created_at: `${createdAt}`
+        })
+
+        alertify.success("Successfully created a new ad.")
+    }
+
 }
 
 export default addAdFields

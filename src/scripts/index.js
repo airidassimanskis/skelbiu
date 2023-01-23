@@ -28,9 +28,6 @@ onAuthStateChanged(auth, (user) => {
         createNavBar()
         addAdFields()
 
-        console.log(user.email)
-        console.log(user.uid)
-
     } else {
 
         // rodyti register
@@ -48,6 +45,8 @@ onAuthStateChanged(auth, (user) => {
                 .then((userCredential) => {
                     // signed in
                     const user = userCredential.user
+
+                    
 
                     const createdAt = new Date().toISOString()
                     set(ref(database, "users/" + user.uid), {
@@ -104,43 +103,3 @@ onAuthStateChanged(auth, (user) => {
         }))
     }
 })
-
-
-
-
-
-
-
-// let createNewSkelbima = () => {
-//     onAuthStateChanged(auth, (user) => {
-//         if (user) {
-//             // User is signed in, see docs for a list of available properties
-//             // https://firebase.google.com/docs/reference/js/firebase.User
-//             const uid = user.uid;
-
-//             const createdAt = new Date().toISOString()
-//             set(ref(database, "skelbimai/" + user.uid), {
-//                 user: user.uid,
-//                 title: skelbimo_title,
-//                 description: skelbimo_description,
-//                 price: skelbimo_price,
-//                 created_at: `${createdAt}`
-//             })
-
-//         } else {
-//             // User is signed out
-//             // ...
-//         }
-//     });
-
-
-// let checkIfLogged = () => {
-//     onAuthStateChanged(auth, (user) => {
-//         if (user) {
-//             console.log("logged in")
-//         } else {
-//             console.log("not logged in")
-//         }
-//     })
-// };
-// setInterval(checkIfLogged, 1000)
