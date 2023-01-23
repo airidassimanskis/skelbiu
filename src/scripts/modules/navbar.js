@@ -12,7 +12,7 @@ function createNavBar() {
     // Sign out function
     const signOutBtn = document.createElement("button")
     signOutBtn.textContent = "Sign Out"
-    signOutBtn.classList = "signOut btn btn-primary btn-md"
+    signOutBtn.classList = "signOut btn btn-primary btn-sm float-end"
     
     let signOutFunc = () => {
         signOut(auth).then(() => {
