@@ -16,12 +16,13 @@ function createNavBar() {
     
     let signOutFunc = () => {
         signOut(auth).then(() => {
-            window.location.reload();
-            console.log("User successfully logged out")
+            window.location.reload()
+
+            alertify.success("Successfully logged out.") // NEVEIKIA KAZKODEL
         }).catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            alert(errorMessage)
+            alertify.error("Logout unsuccessful. If this issue persists please contact an Admin.")
         });
     }
     signOutBtn.addEventListener("click", signOutFunc)

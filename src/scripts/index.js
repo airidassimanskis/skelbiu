@@ -5,7 +5,6 @@ import { getDatabase, set, update, ref } from "https://www.gstatic.com/firebasej
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"
 import createNavBar from "./modules/navbar.js"
 import addAdFields from "./modules/add_ad.js"
-import modal from "./modules/modal.js"
 
 const app = initializeApp(firebaseConfig)
 const database = getDatabase(app)
@@ -20,7 +19,6 @@ onAuthStateChanged(auth, (user) => {
         //istrinti register
         document.querySelector(".login-register-form").remove()
 
-        modal("test", "test")
 
         const lastLoginAt = new Date().toISOString()
         update(ref(database, "users/" + user.uid), {
@@ -30,32 +28,8 @@ onAuthStateChanged(auth, (user) => {
         createNavBar()
         addAdFields()
 
-
         console.log(user.email)
         console.log(user.uid)
-
-        // // Sign out func
-        // const signOutBtn = document.createElement("button")
-        // signOutBtn.textContent = "Sign Out"
-        // signOutBtn.classList = "signOut"
-
-        // const lastLoginAt = new Date().toISOString()
-        // update(ref(database, "users/" + user.uid), {
-        //     last_seen: `${lastLoginAt}`
-        // })
-
-        // let signOutFunc = () => {
-        //     signOut(auth).then(() => {
-        //         window.location.reload();
-        //         console.log("User successfully logged out")
-        //     }).catch((error) => {
-        //         const errorCode = error.code;
-        //         const errorMessage = error.message;
-        //         alert(errorMessage)
-        //     });
-        // }
-        // container.appendChild(signOutBtn)
-        // signOutBtn.addEventListener("click", signOutFunc)
 
     } else {
 
@@ -86,11 +60,12 @@ onAuthStateChanged(auth, (user) => {
                     })
 
                     console.log("New user successfully registered")
+                    alertify.success("Successfully registered.")
                 })
                 .catch((error) => {
                     const errorCode = error.errorCode
                     const errorMessage = error.message
-                    alert(errorMessage)
+                    alertify.error("Registration unsuccessful. Please check if the information is correct.")
                 })
         }
         // document.getElementById("register_password").onkeydown = registerNewUserFunc
@@ -112,12 +87,12 @@ onAuthStateChanged(auth, (user) => {
                         last_seen: `${lastLoginAt}`
                     })
 
-                    console.log("User successfully logged in")
+                    alertify.success("Successfully logged in.")
                 })
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
-                    alert(errorMessage)
+                    alertify.error("Login unsuccessful. Please check if the information is correct.")
                 });
         }
         // document.getElementById("login_email").onkeydown = signInFunc
