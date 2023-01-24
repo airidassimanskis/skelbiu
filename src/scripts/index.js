@@ -13,6 +13,7 @@ const auth = getAuth()
 
 
 let container = document.querySelector(".main-container")
+console.log("labas :)")
 
 onAuthStateChanged(auth, (user) => {
     if (user) {

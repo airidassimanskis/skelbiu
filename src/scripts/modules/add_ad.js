@@ -80,9 +80,9 @@ function addAdFields() {
     container.appendChild(ad_form)
 
 
-    ad_submit.addEventListener("click", AddTheAdToTheBagdad)
+    ad_submit.addEventListener("click", AddTheAdToTheBaghdad)
 
-    function AddTheAdToTheBagdad(){
+    function AddTheAdToTheBaghdad(){
         const createdAt = new Date().toISOString()
         set(ref(database, "skelbimai/" + auth.currentUser.uid), {
             title: ad_title.value,
