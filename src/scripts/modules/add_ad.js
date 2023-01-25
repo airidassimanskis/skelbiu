@@ -104,25 +104,6 @@ function addAdFields() {
             alertify.success("Successfully created a new ad.")
         }
 
-        function timeSince(timeStamp) {
-            let secondsPast = Math.round(Date.now() / 1000) - timeStamp
-            if (secondsPast < 60) {
-              return parseInt(secondsPast) + ' second/s ago'
-            }
-            if (secondsPast < 3600) {
-              return parseInt(secondsPast / 60) + ' minute/s ago'
-            }
-            if (secondsPast <= 86400) {
-              return parseInt(secondsPast / 3600) + ' hour/s ago'
-            }
-            if (secondsPast > 86400) {
-              day = timeStamp.getDate();
-              month = timeStamp.toDateString().match(/ [a-zA-Z]*/)[0].replace(" ", "")
-              year = timeStamp.getFullYear() == now.getFullYear() ? "" : " " + timeStamp.getFullYear()
-              return day + " " + month + year
-            }
-          }
-
         for (let key in ads) {
             let ad = ads[key]
             console.log(ad)
@@ -139,7 +120,7 @@ function addAdFields() {
 
             let ad_card_title = document.createElement("h4")
             ad_card_title.classList = "card-title"
-            ad_card_title.textContent = ad.title
+            ad_card_title.textContent = "FAVORITE SIRDELE " + ad.title
 
             let ad_card_description = document.createElement("p")
             ad_card_description.classList = "card-text"
@@ -155,7 +136,7 @@ function addAdFields() {
 
             let ad_card_footer = document.createElement("div")
             ad_card_footer.classList = "card-footer text-muted"
-            ad_card_footer.textContent = timeSince(ad.created_at)
+            ad_card_footer.textContent = ad.created_at
 
             ad_card_div.appendChild(ad_card_body)
             ad_card_body.appendChild(ad_card_title)

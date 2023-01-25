@@ -1,10 +1,11 @@
 // Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"
 import { firebaseConfig } from "./modules/firebase.js"
-import { getDatabase, set, update, ref } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+import { getDatabase, set, update, ref, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"
 import createNavBar from "./modules/navbar.js"
 import addAdFields from "./modules/add_ad.js"
+import { adminPanel } from "./modules/admin.js"
 
 const app = initializeApp(firebaseConfig)
 const database = getDatabase(app)
@@ -20,14 +21,21 @@ onAuthStateChanged(auth, (user) => {
         //istrinti register
         document.querySelector(".login-register-form").remove()
 
-
         const lastLoginAt = new Date().toISOString()
         update(ref(database, "users/" + user.uid), {
             last_seen: `${lastLoginAt}`
         })
 
         createNavBar()
+        onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
+
+            let user = snapshot.val()
+            if (user.role === "admin"){
+                alertify.warning("Logged in as admin")
+                adminPanel()
+            }})
         addAdFields()
+
 
     } else {
 

@@ -5,14 +5,14 @@ const auth = getAuth()
 function createNavBar() {
     let container = document.querySelector(".main-container")
     let nav_container = document.createElement("nav")
-    nav_container.classList = "navbar navbar-expand-lg navbar-light bg-light"
+    nav_container.classList = "navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-around"
 
 
 
     // Sign out function
     const signOutBtn = document.createElement("button")
     signOutBtn.textContent = "Sign Out"
-    signOutBtn.classList = "signOut btn btn-primary btn-sm float-end"
+    signOutBtn.classList = "signOut btn btn-danger btn-sm nav-btn"
     
     let signOutFunc = () => {
         signOut(auth).then(() => {
@@ -26,7 +26,26 @@ function createNavBar() {
     }
     signOutBtn.addEventListener("click", signOutFunc)
     
+    // Home function
+    const home = document.createElement("button")
+    home.classList = "btn btn-primary btn-sm nav-btn"
+    home.textContent = "Home"
+
+    // My posts function
+    const myPosts = document.createElement("button")
+    myPosts.classList = "btn btn-primary btn-sm nav-btn"
+    myPosts.textContent = "My Posts"
+
+    // Favorites function
+    const myFavorites = document.createElement("button")
+    myFavorites.classList = "btn btn-primary btn-sm nav-btn"
+    myFavorites.textContent = "Favorites"
+
+
     // Appends
+    nav_container.appendChild(home)
+    nav_container.appendChild(myPosts)
+    nav_container.appendChild(myFavorites)
     nav_container.appendChild(signOutBtn)
     container.appendChild(nav_container)
 }

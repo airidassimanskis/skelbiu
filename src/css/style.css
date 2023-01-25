@@ -6,7 +6,6 @@
     box-sizing: border-box;
     font-family: 'Saira Condensed', sans-serif;
 }
-
 .alertify-notifier{
     text-align: center;
 }
@@ -18,4 +17,8 @@
 .ad-form {
     margin: auto;
     width: 60%;
+}
+
+.nav-btn{
+    width: 70px;
 }
