@@ -29,9 +29,8 @@ onAuthStateChanged(auth, (user) => {
                 update(ref(database, "users/" + user.uid), {
                     last_seen: `${lastLoginAt}`
                 })
-
                 createNavBar()
-                let user = snapshot.val()
+
                 if (user.role === "admin") {
                     alertify.warning("Logged in as admin")
                     adminPanel()
