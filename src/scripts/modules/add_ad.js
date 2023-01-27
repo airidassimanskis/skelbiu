@@ -3,6 +3,7 @@ import { firebaseConfig } from "./firebase.js"
 import { getDatabase, set, update, push, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"
 import createNavBar from "./navbar.js"
+import { adminPanel } from "./admin.js"
 
 const app = initializeApp(firebaseConfig)
 const database = getDatabase(app)
@@ -24,6 +25,13 @@ let cities = [
 function addAdFields() {
     container.innerHTML = ""
     createNavBar()
+    onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
+        let user = snapshot.val()
+
+        if (user.role == "admin") {
+            adminPanel()
+        }
+})
 
     onValue(ref(database, "skelbimai/"), (snapshot) => {
         let ads = snapshot.val()
