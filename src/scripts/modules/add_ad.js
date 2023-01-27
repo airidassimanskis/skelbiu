@@ -35,6 +35,7 @@ function addAdFields() {
         ad_title.classList = "form-control form-control-lg m-3"
         ad_title.type = "text"
         ad_title.placeholder = "Title"
+        ad_title.id = "ad_title"
 
         let ad_description = document.createElement("textarea")
         ad_description.classList = "form-control form-control-lg m-3"
@@ -202,6 +203,8 @@ function addAdFields() {
 
             onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
                 let user = snapshot.val()
+
+                // favorite button func
                 let ad_favorite_btn = document.createElement("button")
                 if (user.favorites && user.favorites[key] && user.favorites[key].favorited_ad) {
                     ad_favorite_btn.classList = "favorite-btn btn bg-warning"
@@ -221,6 +224,8 @@ function addAdFields() {
                 if (ad.created_by == auth.currentUser.uid) {
                     ad_favorite_btn.hidden = true
                 }
+
+                // edit own ad func
             })
 
             let ad_card_description = document.createElement("p")
@@ -284,10 +289,10 @@ function addAdFields() {
             ad_card_body.appendChild(ad_card_price)
             ad_card_div.appendChild(ad_card_footer)
             container.appendChild(ad_card_div)
+            container.appendChild(ad_display_container)
         }
     })
     
-    container.appendChild(ad_display_container)
 
 }
 
