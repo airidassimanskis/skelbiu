@@ -221,7 +221,7 @@ function addAdFields() {
                 }
                 ad_card_title.appendChild(ad_favorite_btn)
 
-                if (ad.created_by == auth.currentUser.uid) {
+                if (ad.created_by == auth.currentUser.uid || user.role == "admin") {
                     ad_favorite_btn.hidden = true
 
                     // edit own ad func
