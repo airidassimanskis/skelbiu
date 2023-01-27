@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
 import { firebaseConfig } from "./firebase.js"
 import { getDatabase, set, update, push, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"
+import createNavBar from "./navbar.js"
 
 const app = initializeApp(firebaseConfig)
 const database = getDatabase(app)
@@ -21,6 +22,8 @@ let cities = [
 
 
 function addAdFields() {
+    container.innerHTML = ""
+    createNavBar()
 
     onValue(ref(database, "skelbimai/"), (snapshot) => {
         let ads = snapshot.val()
