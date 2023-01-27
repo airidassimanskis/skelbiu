@@ -223,9 +223,40 @@ function addAdFields() {
 
                 if (ad.created_by == auth.currentUser.uid) {
                     ad_favorite_btn.hidden = true
+
+                    // edit own ad func
+                    let ad_edit_btn = document.createElement("a")
+                    ad_edit_btn.classList = "edit-btn btn btn-sm bg-primary"
+                    ad_edit_btn.innerHTML = "Edit"
+                    ad_edit_btn.href = "#ad_title"
+
+                    ad_edit_btn.addEventListener("click", () => {
+                        ad_title.value = ad.title
+                        ad_description.value = ad.description
+                        ad_city_select.value = ad.city
+                        ad_price.value = ad.price
+                        ad_category_select.value = ad.category
+                        ad_phone.value = ad.phone
+
+                        ad_submit.textContent = "Edit Ad"
+
+                        ad_submit.addEventListener("click", () => {
+                            update(ref(database, "skelbimai/" + key), {
+                                title: ad_title.value,
+                                description: ad_description.value,
+                                city: ad_city_select.value,
+                                category: ad_category_select.value,
+                                price: ad_price.value,
+                                phone: ad_phone.value,
+                                email: ad_email.placeholder,
+                            })
+                            remove(ref(database, "skelbimai/" + key))
+                            window.location.reload()
+                        })
+                    })
+                    ad_card_title.appendChild(ad_edit_btn)
                 }
 
-                // edit own ad func
             })
 
             let ad_card_description = document.createElement("p")
@@ -292,7 +323,7 @@ function addAdFields() {
             container.appendChild(ad_display_container)
         }
     })
-    
+
 
 }
 
