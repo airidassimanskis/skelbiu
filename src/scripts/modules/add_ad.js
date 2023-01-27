@@ -118,9 +118,10 @@ function addAdFields() {
             let ad_card_body = document.createElement("div")
             ad_card_body.classList = "card-body"
 
+            // favorite an ad function
             let ad_card_title = document.createElement("h4")
             ad_card_title.classList = "card-title"
-            ad_card_title.textContent = "FAVORITE SIRDELE " + ad.title
+            ad_card_title.innerHTML = '<button class = "favorite-btn"></button>' + ad.title
 
             let ad_card_description = document.createElement("p")
             ad_card_description.classList = "card-text"

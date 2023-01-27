@@ -21,20 +21,40 @@ onAuthStateChanged(auth, (user) => {
         //istrinti register
         document.querySelector(".login-register-form").remove()
 
-        const lastLoginAt = new Date().toISOString()
-        update(ref(database, "users/" + user.uid), {
-            last_seen: `${lastLoginAt}`
+        onValue(ref(database, "users/" + user.uid), (snapshot) => {
+            let user = snapshot.val()
+
+            if (user.banned == false) {
+                const lastLoginAt = new Date().toISOString()
+                update(ref(database, "users/" + user.uid), {
+                    last_seen: `${lastLoginAt}`
+                })
+
+                createNavBar()
+                let user = snapshot.val()
+                if (user.role === "admin") {
+                    alertify.warning("Logged in as admin")
+                    adminPanel()
+                }
+                addAdFields()
+            } else {
+                alertify.error("You are currently banned.")
+                alertify.error("If you want to appeal your ban please contact the website administrator.")
+
+                const signOutBtn = document.createElement("button")
+                signOutBtn.textContent = "Sign Out"
+                signOutBtn.classList = "signOut btn btn-danger btn-sm nav-btn"
+                container.appendChild(signOutBtn)
+
+                let signOutFunc = () => {
+                    signOut(auth).then(() => {
+                        window.location.reload()
+                    })
+                }
+                signOutBtn.addEventListener("click", signOutFunc)
+            }
         })
 
-        createNavBar()
-        onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
-
-            let user = snapshot.val()
-            if (user.role === "admin"){
-                alertify.warning("Logged in as admin")
-                adminPanel()
-            }})
-        addAdFields()
 
 
     } else {
@@ -55,11 +75,12 @@ onAuthStateChanged(auth, (user) => {
                     // signed in
                     const user = userCredential.user
 
-                    
+
 
                     const createdAt = new Date().toISOString()
                     set(ref(database, "users/" + user.uid), {
                         role: "user",
+                        banned: false,
                         user_email: email,
                         first_name: first_name,
                         last_name: last_name,
@@ -79,7 +100,7 @@ onAuthStateChanged(auth, (user) => {
 
         document.getElementById("signUp").addEventListener("click", registerNewUserFunc)
         document.querySelectorAll(".register_input").forEach(inp => inp.addEventListener("keydown", (e) => {
-            if (e.code === "Enter") {registerNewUserFunc()}
+            if (e.code === "Enter") { registerNewUserFunc() }
         }))
 
         // Login func
@@ -108,7 +129,7 @@ onAuthStateChanged(auth, (user) => {
 
         document.getElementById("signIn").addEventListener("click", signInFunc)
         document.querySelectorAll(".login_input").forEach(inp => inp.addEventListener("keydown", (e) => {
-            if (e.code === "Enter") {signInFunc()}
+            if (e.code === "Enter") { signInFunc() }
         }))
     }
 })
