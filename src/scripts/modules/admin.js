@@ -60,7 +60,34 @@ export function adminPanel() {
                                 banned: true
                             })
                             alertify.success(`Successfully banned ${user.user_email}`)
-                            admin_ban_user.disabled = true
+
+                        }
+                    }
+
+                    admin_ban_user.addEventListener("click", ban_user_func)
+
+
+                    admin_users_th.appendChild(admin_ban_user)
+                    admin_users_tr.appendChild(admin_users_th)
+                }
+                else if (user.banned == true) {
+
+                    let admin_users_th = document.createElement("th")
+                    admin_users_th.textContent = user.user_email
+
+                    // BAN USER FUNCTION
+                    let admin_ban_user = document.createElement("button")
+                    admin_ban_user.classList = "m-1 btn btn-success btn-sm admin-button"
+                    admin_ban_user.textContent = "UNBAN"
+
+                    function ban_user_func() {
+                        if (user.role === "admin") {
+                            alertify.error("Can't unban admins lil bro 💀")
+                        } else {
+                            update(ref(database, "users/" + u), {
+                                banned: false
+                            })
+                            alertify.success(`Successfully unbanned ${user.user_email}`)
 
                         }
                     }
