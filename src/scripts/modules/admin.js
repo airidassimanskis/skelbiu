@@ -85,13 +85,6 @@ export function adminPanel() {
         let categories = snapshot.val()
         cat_tr.innerHTML = ""
 
-        add_categories_button.addEventListener("click", function () {
-            set(ref(database, "categories/" + add_categories_input.value), {
-                category_name: add_categories_input.value
-            })
-            alertify.success("Category added successfully")
-        })
-
         for (let c in categories) {
             let cat_th = document.createElement("th")
             cat_th.innerHTML = c
@@ -112,6 +105,11 @@ export function adminPanel() {
             cat_th.appendChild(cat_del)
         }
 
+        add_categories_button.addEventListener("click", () => {
+            set(ref(database, "categories/" + add_categories_input.value), {
+                category_name: add_categories_input.value
+            })
+        })
 
 
         // user ban function
