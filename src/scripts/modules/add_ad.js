@@ -83,6 +83,13 @@ function addAdFields() {
         ad_submit.classList = "btn btn-success btn-lg form-control form-control-lg m-3"
         ad_submit.textContent = "Post Ad"
 
+        // ! SITAS NEVEIKIA vvvvvvv
+        // ! SITAS NEVEIKIA vvvvvvv
+        // ! SITAS NEVEIKIA vvvvvvv
+        // ! SITAS NEVEIKIA vvvvvvv
+        // ! SITAS NEVEIKIA vvvvvvv
+        // ! SITAS NEVEIKIA vvvvvvv
+        // ! SITAS NEVEIKIA vvvvvvv
         if (ad_title.value.length > 20 || ad_phone.value.length > 20) {
             alertify.error("Title or Phone number is too long. Maximum amount of characters is 20.")
             return
@@ -191,7 +198,12 @@ function addAdFields() {
 
                 let ad_favorite_btn = document.createElement("button")
                 ad_favorite_btn.classList = "favorite-btn"
-                
+                // ! CIA REIKIA PRIDETI KAD ATFAVORITINTI IR SPALVA
+                // ! CIA REIKIA PRIDETI KAD ATFAVORITINTI IR SPALVA
+                // ! CIA REIKIA PRIDETI KAD ATFAVORITINTI IR SPALVA
+                // ! CIA REIKIA PRIDETI KAD ATFAVORITINTI IR SPALVA
+                // ! CIA REIKIA PRIDETI KAD ATFAVORITINTI IR SPALVA
+                // ! CIA REIKIA PRIDETI KAD ATFAVORITINTI IR SPALVA
                 ad_favorite_btn.addEventListener("click", () => {
                     console.log("favorite")
                     set(ref(database, "users/" + auth.currentUser.uid + "/favorites/" + key), {
