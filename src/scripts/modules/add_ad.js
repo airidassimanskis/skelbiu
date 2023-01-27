@@ -195,25 +195,27 @@ function addAdFields() {
 
             onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
                 let user = snapshot.val()
-
                 let ad_favorite_btn = document.createElement("button")
-                ad_favorite_btn.classList = "favorite-btn"
-                // ! CIA REIKIA PRIDETI KAD ATFAVORITINTI IR SPALVA
-                // ! CIA REIKIA PRIDETI KAD ATFAVORITINTI IR SPALVA
-                // ! CIA REIKIA PRIDETI KAD ATFAVORITINTI IR SPALVA
-                // ! CIA REIKIA PRIDETI KAD ATFAVORITINTI IR SPALVA
-                // ! CIA REIKIA PRIDETI KAD ATFAVORITINTI IR SPALVA
-                // ! CIA REIKIA PRIDETI KAD ATFAVORITINTI IR SPALVA
-                ad_favorite_btn.addEventListener("click", () => {
-                    console.log("favorite")
-                    set(ref(database, "users/" + auth.currentUser.uid + "/favorites/" + key), {
-                        favorited_ad: true
+                if (user.favorites && user.favorites[key] && user.favorites[key].favorited_ad) {
+                    ad_favorite_btn.classList = "favorite-btn btn bg-warning"
+                    ad_favorite_btn.addEventListener("click", () => {
+                        remove(ref(database, "users/" + auth.currentUser.uid + "/favorites/" + key))
                     })
-                })
-
+                } else {
+                    ad_favorite_btn.classList = "favorite-btn btn bg-secondary"
+                    ad_favorite_btn.addEventListener("click", () => {
+                        set(ref(database, "users/" + auth.currentUser.uid + "/favorites/" + key), {
+                            favorited_ad: true
+                        })
+                    })
+                }
                 ad_card_title.appendChild(ad_favorite_btn)
-            })
 
+                if (ad.created_by == auth.currentUser.uid) {
+                    ad_favorite_btn.hidden = true
+                    console.log("asd")
+                }
+            })
 
             let ad_card_description = document.createElement("p")
             ad_card_description.classList = "card-text"
