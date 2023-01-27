@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"
 import { firebaseConfig } from "./firebase.js"
-import { getDatabase, set, update, ref, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+import { getDatabase, set, update, push, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"
 
 const app = initializeApp(firebaseConfig)
@@ -70,6 +70,12 @@ function addAdFields() {
         ad_submit.classList = "btn btn-success btn-lg form-control form-control-lg m-3"
         ad_submit.textContent = "Post Ad"
 
+        ad_title.required = true
+        ad_description.required = true
+        ad_city_select.required = true
+        ad_price.required = true
+        ad_phone.required = true
+
         ad_form.appendChild(ad_title)
         ad_form.appendChild(ad_description)
 
@@ -85,12 +91,15 @@ function addAdFields() {
         container.appendChild(ad_form)
 
 
-        ad_submit.addEventListener("click", AddTheAdToTheBaghdad)
 
         function AddTheAdToTheBaghdad() {
+            if (!ad_title.value.trim() || !ad_description.value.trim() || !ad_price.value.trim() || !ad_phone.value.trim()) {
+                alertify.error("All fields are required. Please fill in all the fields.")
+                return
+            }
+
             const createdAt = Math.round(Date.now() / 1000)
-            const adUID = new Date().toISOString() + Math.random().toString(36)
-            set(ref(database, "skelbimai/" + auth.currentUser.uid), {
+            push(ref(database, "skelbimai/"), {
                 title: ad_title.value,
                 description: ad_description.value,
                 city: ad_city_select.value,
@@ -103,6 +112,24 @@ function addAdFields() {
 
             alertify.success("Successfully created a new ad.")
         }
+
+
+        function getRelativeTime(timestamp) {
+            const currentTime = Date.now() / 1000;
+            const timeDiff = currentTime - timestamp;
+
+            if (timeDiff < 60) {
+                return `${Math.round(timeDiff)} seconds ago`;
+            } else if (timeDiff < 3600) {
+                return `${Math.round(timeDiff / 60)} minutes ago`;
+            } else if (timeDiff < 86400) {
+                return `${Math.round(timeDiff / 3600)} hours ago`;
+            } else {
+                return `${Math.round(timeDiff / 86400)} days ago`;
+            }
+        }
+
+        ad_submit.addEventListener("click", AddTheAdToTheBaghdad)
 
         let current_posts_text = document.createElement("h2")
         current_posts_text.textContent = "Current posts by other users"
@@ -121,10 +148,11 @@ function addAdFields() {
             let ad_card_body = document.createElement("div")
             ad_card_body.classList = "card-body"
 
-            // favorite an ad function
+            // favorite an ad function and admin delete ad function
             let ad_card_title = document.createElement("h4")
             ad_card_title.classList = "card-title"
             ad_card_title.innerHTML = '<button class = "favorite-btn"></button>' + ad.title
+
 
             let ad_card_description = document.createElement("p")
             ad_card_description.classList = "card-text"
@@ -140,7 +168,29 @@ function addAdFields() {
 
             let ad_card_footer = document.createElement("div")
             ad_card_footer.classList = "card-footer text-muted"
-            ad_card_footer.textContent = ad.created_at
+            ad_card_footer.textContent = getRelativeTime(ad.created_at)
+
+            onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
+                let user = snapshot.val()
+                if (user.role == "admin") {
+
+                    ad_card_footer.innerHTML = `${getRelativeTime(ad.created_at)} <b style="position: absolute; right: 15px;">${ad.email}</b>`
+
+                    let admin_delete_ad = document.createElement("button")
+                    admin_delete_ad.classList = "admin-delete-ad-btn btn btn-danger"
+                    ad_card_title.appendChild(admin_delete_ad)
+
+                    function deleteAd() {
+                        remove(ref(database, "skelbimai/" + key))
+                        window.location.reload()
+                    }
+
+                    admin_delete_ad.addEventListener('click', deleteAd)
+
+
+
+                }
+            })
 
             ad_card_div.appendChild(ad_card_body)
             ad_card_body.appendChild(ad_card_title)

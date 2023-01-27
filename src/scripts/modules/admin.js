@@ -20,11 +20,9 @@ export function adminPanel() {
         let admin_panel_h2 = document.createElement("h2")
         admin_panel_h2.textContent = "Admin Panel"
         admin_panel_div.appendChild(admin_panel_h2)
-
-        document.querySelector(".nav-myfavorites").remove()
-        document.querySelector(".nav-home").remove()
-        document.querySelector(".nav-myposts").remove()
-
+        
+        let admin_users_tr = document.createElement("tr")
+        admin_users_tr.classList = "admin-users"
         
         for (let u in users){
             onValue(ref(database, "users/" + u), (snapshot) => {
@@ -32,7 +30,6 @@ export function adminPanel() {
                 
                 if (user.banned == false){
                     
-                    let admin_users_tr = document.createElement("tr")
                     let admin_users_th = document.createElement("th")
                     admin_users_th.textContent = user.user_email
     
@@ -49,7 +46,8 @@ export function adminPanel() {
                                 banned: true
                             })
                             alertify.success(`Successfully banned ${user.user_email}`)
-                            document.querySelector(".admin-panel-div").remove()
+                            admin_ban_user.disabled = true
+
                         }
                     }
     
@@ -59,10 +57,11 @@ export function adminPanel() {
                     admin_users_th.appendChild(admin_ban_user)
                     admin_users_tr.appendChild(admin_users_th)
                     admin_panel_div.appendChild(admin_users_tr)
-                }
+                } 
 
         })}
 
+        let br = document.createElement("br")
 
         container.appendChild(admin_panel_div)
 

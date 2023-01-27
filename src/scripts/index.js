@@ -64,11 +64,18 @@ onAuthStateChanged(auth, (user) => {
 
         // register func
         let registerNewUserFunc = () => {
-            const first_name = document.getElementById("register_first_name").value
-            const last_name = document.getElementById("register_last_name").value
-            const email = document.getElementById("register_email").value
-            const phone = document.getElementById("register_phone").value
-            const password = document.getElementById("register_password").value
+            const first_name = document.getElementById("register_first_name").value.trim()
+            const last_name = document.getElementById("register_last_name").value.trim()
+            const email = document.getElementById("register_email").value.trim()
+            const phone = document.getElementById("register_phone").value.trim()
+            const password = document.getElementById("register_password").value.trim()
+        
+
+
+            if (!first_name || !last_name || !email || !phone || !password) {
+                alertify.error("All fields are required to successfully register.")
+                return
+            }
 
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
@@ -94,7 +101,7 @@ onAuthStateChanged(auth, (user) => {
                 .catch((error) => {
                     const errorMessage = error.message
                     console.log(errorMessage)
-                    alertify.error("Registration unsuccessful. Please check if the information is correct.")
+                    alertify.error("Registration unsuccessful. Please check if the information is correct." + ` <b>${errorMessage}</b>`)
                 })
         }
 
@@ -123,7 +130,7 @@ onAuthStateChanged(auth, (user) => {
                 })
                 .catch((error) => {
                     const errorMessage = error.message;
-                    alertify.error("Login unsuccessful. Please check if the information is correct.")
+                    alertify.error("Login unsuccessful. Please check if the information is correct." + ` <b>${errorMessage}</b>`)
                 });
         }
 
