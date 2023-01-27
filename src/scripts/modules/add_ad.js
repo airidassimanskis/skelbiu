@@ -86,26 +86,6 @@ function addAdFields() {
         ad_submit.classList = "btn btn-success btn-lg form-control form-control-lg m-3"
         ad_submit.textContent = "Post Ad"
 
-        // ! SITAS NEVEIKIA vvvvvvv
-        // ! SITAS NEVEIKIA vvvvvvv
-        // ! SITAS NEVEIKIA vvvvvvv
-        // ! SITAS NEVEIKIA vvvvvvv
-        // ! SITAS NEVEIKIA vvvvvvv
-        // ! SITAS NEVEIKIA vvvvvvv
-        // ! SITAS NEVEIKIA vvvvvvv
-        if (ad_title.value.length > 20 || ad_phone.value.length > 20) {
-            alertify.error("Title or Phone number is too long. Maximum amount of characters is 20.")
-            return
-        }
-        if (ad_description.value.length > 100) {
-            alertify.error("Description is too long. Maximum amount of characters is 100")
-            return
-        }
-        if (ad_price.value.length > 6) {
-            alertify.error("Price is too long. Maximum amount of characters is 6")
-            return
-        }
-
         ad_title.required = true
         ad_description.required = true
         ad_city_select.required = true
@@ -144,6 +124,18 @@ function addAdFields() {
                 alertify.error("All fields are required. Please fill in all the fields.")
                 return
             }
+            if (ad_title.value.trim().length > 20 || ad_phone.value.trim().length > 20) {
+                alertify.error("Title or Phone number is too long. Maximum amount of characters is 20.")
+                return
+            }
+            if (ad_description.value.trim().length > 300) {
+                alertify.error("Description is too long. Maximum amount of characters is 00")
+                return
+            }
+            if (ad_price.value.trim().length > 6) {
+                alertify.error("Price is too long. Maximum amount of characters is 6")
+                return
+            }
 
             const createdAt = Math.round(Date.now() / 1000)
             push(ref(database, "skelbimai/"), {
@@ -159,6 +151,7 @@ function addAdFields() {
             })
 
             alertify.success("Successfully created a new ad.")
+            window.location.reload()
         }
 
 
@@ -291,10 +284,10 @@ function addAdFields() {
             ad_card_body.appendChild(ad_card_price)
             ad_card_div.appendChild(ad_card_footer)
             container.appendChild(ad_card_div)
-            container.appendChild(ad_display_container)
         }
     })
-
+    
+    container.appendChild(ad_display_container)
 
 }
 

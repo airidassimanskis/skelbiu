@@ -26,26 +26,7 @@ function createNavBar() {
     }
     signOutBtn.addEventListener("click", signOutFunc)
     
-    // Home function
-    const home = document.createElement("button")
-    home.classList = "btn btn-primary btn-sm nav-btn nav-home"
-    home.textContent = "Home"
-
-    // My posts function
-    const myPosts = document.createElement("button")
-    myPosts.classList = "btn btn-primary btn-sm nav-btn nav-myposts"
-    myPosts.textContent = "My Posts"
-
-    // Favorites function
-    const myFavorites = document.createElement("button")
-    myFavorites.classList = "btn btn-primary btn-sm nav-btn nav-myfavorites"
-    myFavorites.textContent = "Favorites"
-
-
     // Appends
-    nav_container.appendChild(home)
-    nav_container.appendChild(myPosts)
-    nav_container.appendChild(myFavorites)
     nav_container.appendChild(signOutBtn)
     container.appendChild(nav_container)
 }
