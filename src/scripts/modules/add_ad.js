@@ -55,7 +55,19 @@ function addAdFields() {
         let ad_price = document.createElement("input")
         ad_price.type = "number"
         ad_price.classList = "form-control form-control-lg m-3"
-        ad_price.placeholder = "$ 0.00"
+        ad_price.placeholder = "$ 0"
+
+        let ad_category_select = document.createElement("select")
+        ad_category_select.classList = "form-control form-control-lg m-3"
+
+        onValue(ref(database, "categories/"), (snapshot) => {
+            let categories = snapshot.val()
+            for (let c in categories) {
+                var ad_categories_option = document.createElement('option')
+                ad_categories_option.innerHTML = c
+                ad_category_select.appendChild(ad_categories_option)
+        }})
+
 
         let ad_phone = document.createElement("input")
         ad_phone.classList = "form-control form-control-lg m-3"
@@ -84,6 +96,7 @@ function addAdFields() {
         ad_div.appendChild(ad_price)
 
         ad_form.appendChild(ad_div)
+        ad_form.appendChild(ad_category_select)
         ad_form.appendChild(ad_phone)
         ad_form.appendChild(ad_email)
         ad_form.appendChild(ad_submit)
@@ -103,6 +116,7 @@ function addAdFields() {
                 title: ad_title.value,
                 description: ad_description.value,
                 city: ad_city_select.value,
+                category: ad_category_select.value,
                 price: ad_price.value,
                 phone: ad_phone.value,
                 email: ad_email.placeholder,
@@ -129,6 +143,11 @@ function addAdFields() {
             }
         }
 
+        function formatCurrency(number) {
+            return new Intl.NumberFormat('en-US', { useGrouping: true, maximumFractionDigits: 2 }).format(number);
+        }
+        
+
         ad_submit.addEventListener("click", AddTheAdToTheBaghdad)
 
         let current_posts_text = document.createElement("h2")
@@ -151,20 +170,20 @@ function addAdFields() {
             // favorite an ad function and admin delete ad function
             let ad_card_title = document.createElement("h4")
             ad_card_title.classList = "card-title"
-            ad_card_title.innerHTML = '<button class = "favorite-btn"></button>' + ad.title
+            ad_card_title.innerHTML = `<button class = "favorite-btn"></button>${ad.title}<b> • ${ad.category} • ${ad.city}</b>`
 
 
             let ad_card_description = document.createElement("p")
             ad_card_description.classList = "card-text"
             ad_card_description.textContent = ad.description
 
-            let ad_card_phone = document.createElement("h5")
+            let ad_card_phone = document.createElement("h4")
             ad_card_phone.classList = "card-text"
-            ad_card_phone.textContent = ad.phone
+            ad_card_phone.innerHTML = '<i class="bi bi-phone"></i>' + ad.phone
 
-            let ad_card_price = document.createElement("h3")
+            let ad_card_price = document.createElement("h4")
             ad_card_price.classList = "card-text"
-            ad_card_price.textContent = "$" + ad.price
+            ad_card_price.innerHTML = '<i class="bi bi-currency-dollar"></i>' + formatCurrency(ad.price)
 
             let ad_card_footer = document.createElement("div")
             ad_card_footer.classList = "card-footer text-muted"
