@@ -109,6 +109,15 @@ function addAdFields() {
         ad_price.required = true
         ad_phone.required = true
 
+        let your_favs = document.createElement("h2")
+        your_favs.classList = "m-3"
+        your_favs.innerHTML = "Your Favorites"
+
+        let your_favs_ul = document.createElement("ul")
+        your_favs_ul.classList = "list-group m-3"
+
+
+
         ad_form.appendChild(ad_title)
         ad_form.appendChild(ad_description)
 
@@ -124,7 +133,8 @@ function addAdFields() {
 
         container.appendChild(ad_form)
 
-
+        your_favs.appendChild(your_favs_ul)
+        container.appendChild(your_favs)
 
         function AddTheAdToTheBaghdad() {
             if (!ad_title.value.trim() || !ad_description.value.trim() || !ad_price.value.trim() || !ad_phone.value.trim()) {
@@ -192,6 +202,7 @@ function addAdFields() {
             let ad_card_title = document.createElement("h4")
             ad_card_title.classList = "card-title"
             ad_card_title.innerHTML = `${ad.title}<b> • ${ad.category} • ${ad.city}</b>`
+            ad_card_title.id = key
 
             onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
                 let user = snapshot.val()
@@ -213,7 +224,6 @@ function addAdFields() {
 
                 if (ad.created_by == auth.currentUser.uid) {
                     ad_favorite_btn.hidden = true
-                    console.log("asd")
                 }
             })
 
@@ -233,6 +243,7 @@ function addAdFields() {
             ad_card_footer.classList = "card-footer text-muted"
             ad_card_footer.textContent = getRelativeTime(ad.created_at)
 
+            // remove ad func
             onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
                 let user = snapshot.val()
                 if (user.role == "admin" || ad.created_by == auth.currentUser.uid) {
@@ -252,6 +263,21 @@ function addAdFields() {
 
 
 
+                }
+            })
+
+
+            // your favorites
+
+            onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
+                let user = snapshot.val()
+
+                if (user.favorites && user.favorites[key] && user.favorites[key].favorited_ad) {
+                    let your_favs_li = document.createElement("li")
+                    your_favs_li.classList = "list-group-item your-favs-li"
+                    your_favs_li.innerHTML = `<a href="#${key}">${ad.title}<b> • ${ad.category} • ${ad.city}</b></a>`
+
+                    your_favs_ul.appendChild(your_favs_li)
                 }
             })
 
