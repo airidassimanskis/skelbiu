@@ -28,17 +28,17 @@ function createNavBar() {
     
     // Home function
     const home = document.createElement("button")
-    home.classList = "btn btn-primary btn-sm nav-btn"
+    home.classList = "btn btn-primary btn-sm nav-btn nav-home"
     home.textContent = "Home"
 
     // My posts function
     const myPosts = document.createElement("button")
-    myPosts.classList = "btn btn-primary btn-sm nav-btn"
+    myPosts.classList = "btn btn-primary btn-sm nav-btn nav-myposts"
     myPosts.textContent = "My Posts"
 
     // Favorites function
     const myFavorites = document.createElement("button")
-    myFavorites.classList = "btn btn-primary btn-sm nav-btn"
+    myFavorites.classList = "btn btn-primary btn-sm nav-btn nav-myfavorites"
     myFavorites.textContent = "Favorites"
 
 

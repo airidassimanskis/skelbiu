@@ -21,11 +21,16 @@ export function adminPanel() {
         admin_panel_h2.textContent = "Admin Panel"
         admin_panel_div.appendChild(admin_panel_h2)
 
+        document.querySelector(".nav-myfavorites").remove()
+        document.querySelector(".nav-home").remove()
+        document.querySelector(".nav-myposts").remove()
+
+        
         for (let u in users){
             onValue(ref(database, "users/" + u), (snapshot) => {
                 let user = snapshot.val()
-
-                if (user.banned == null){
+                
+                if (user.banned == false){
                     
                     let admin_users_tr = document.createElement("tr")
                     let admin_users_th = document.createElement("th")

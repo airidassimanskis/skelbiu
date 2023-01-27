@@ -21,14 +21,15 @@ onAuthStateChanged(auth, (user) => {
         //istrinti register
         document.querySelector(".login-register-form").remove()
 
+        const lastLoginAt = new Date().toISOString()
+        update(ref(database, "users/" + user.uid), {
+            last_seen: `${lastLoginAt}`
+        })
+
         onValue(ref(database, "users/" + user.uid), (snapshot) => {
             let user = snapshot.val()
 
             if (user.banned == false) {
-                const lastLoginAt = new Date().toISOString()
-                update(ref(database, "users/" + user.uid), {
-                    last_seen: `${lastLoginAt}`
-                })
                 createNavBar()
 
                 if (user.role === "admin") {

@@ -104,10 +104,13 @@ function addAdFields() {
             alertify.success("Successfully created a new ad.")
         }
 
+        let current_posts_text = document.createElement("h2")
+        current_posts_text.textContent = "Current posts by other users"
+        current_posts_text.classList = "m-3"
+        container.appendChild(current_posts_text)
+
         for (let key in ads) {
             let ad = ads[key]
-            console.log(ad)
-
 
             let ad_display_container = document.createElement("div")
             ad_display_container.classList = ""
