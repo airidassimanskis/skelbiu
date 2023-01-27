@@ -29,7 +29,7 @@ function addAdFields() {
         let ads = snapshot.val()
 
         let ad_form = document.createElement("form")
-        ad_form.classList = "mt-5"
+        ad_form.classList = "mt-3 ad-form-div"
 
         let ad_title = document.createElement("input")
         ad_title.classList = "form-control form-control-lg m-3"

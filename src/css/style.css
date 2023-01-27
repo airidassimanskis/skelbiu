@@ -6,6 +6,16 @@
     box-sizing: border-box;
     font-family: 'Saira Condensed', sans-serif;
 }
+
+.ad-form-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 95%;
+    margin: auto;
+}
+
 .alertify-notifier{
     text-align: center;
 }
@@ -89,6 +99,5 @@
 }
 
 .your-favs-li{
-    height: 45px;
     font-size: 20px;
 }
