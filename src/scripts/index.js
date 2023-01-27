@@ -69,11 +69,22 @@ onAuthStateChanged(auth, (user) => {
             const email = document.getElementById("register_email").value.trim()
             const phone = document.getElementById("register_phone").value.trim()
             const password = document.getElementById("register_password").value.trim()
-        
-
 
             if (!first_name || !last_name || !email || !phone || !password) {
                 alertify.error("All fields are required to successfully register.")
+                return
+            }
+
+            if (first_name.length > 20 || last_name.length > 20 || phone.length > 20){
+                alertify.error("First name, Last name or Phone number is too long. Maximum amount of characters is 20.")
+                return
+            }
+            if (email.length > 35){
+                alertify.error("Email is too long. Maximum amount of characters is 35.")
+                return
+            }
+            if (password.length > 65){
+                alertify.error("Password is too long. Maximum amount of characters is 65.")
                 return
             }
 

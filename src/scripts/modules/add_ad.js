@@ -26,7 +26,7 @@ function addAdFields() {
         let ads = snapshot.val()
 
         let ad_form = document.createElement("form")
-        ad_form.classList = "ad-form"
+        ad_form.classList = "mt-5"
 
         let ad_title = document.createElement("input")
         ad_title.classList = "form-control form-control-lg m-3"
@@ -66,7 +66,8 @@ function addAdFields() {
                 var ad_categories_option = document.createElement('option')
                 ad_categories_option.innerHTML = c
                 ad_category_select.appendChild(ad_categories_option)
-        }})
+            }
+        })
 
 
         let ad_phone = document.createElement("input")
@@ -81,6 +82,19 @@ function addAdFields() {
         let ad_submit = document.createElement("button")
         ad_submit.classList = "btn btn-success btn-lg form-control form-control-lg m-3"
         ad_submit.textContent = "Post Ad"
+
+        if (ad_title.value.length > 20 || ad_phone.value.length > 20) {
+            alertify.error("Title or Phone number is too long. Maximum amount of characters is 20.")
+            return
+        }
+        if (ad_description.value.length > 100) {
+            alertify.error("Description is too long. Maximum amount of characters is 100")
+            return
+        }
+        if (ad_price.value.length > 6) {
+            alertify.error("Price is too long. Maximum amount of characters is 6")
+            return
+        }
 
         ad_title.required = true
         ad_description.required = true
@@ -146,7 +160,7 @@ function addAdFields() {
         function formatCurrency(number) {
             return new Intl.NumberFormat('en-US', { useGrouping: true, maximumFractionDigits: 2 }).format(number);
         }
-        
+
 
         ad_submit.addEventListener("click", AddTheAdToTheBaghdad)
 
@@ -167,10 +181,26 @@ function addAdFields() {
             let ad_card_body = document.createElement("div")
             ad_card_body.classList = "card-body"
 
-            // favorite an ad function and admin delete ad function
+            // favorite button func
             let ad_card_title = document.createElement("h4")
             ad_card_title.classList = "card-title"
-            ad_card_title.innerHTML = `<button class = "favorite-btn"></button>${ad.title}<b> • ${ad.category} • ${ad.city}</b>`
+            ad_card_title.innerHTML = `${ad.title}<b> • ${ad.category} • ${ad.city}</b>`
+
+            onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
+                let user = snapshot.val()
+
+                let ad_favorite_btn = document.createElement("button")
+                ad_favorite_btn.classList = "favorite-btn"
+                
+                ad_favorite_btn.addEventListener("click", () => {
+                    console.log("favorite")
+                    set(ref(database, "users/" + auth.currentUser.uid + "/favorites/" + key), {
+                        favorited_ad: true
+                    })
+                })
+
+                ad_card_title.appendChild(ad_favorite_btn)
+            })
 
 
             let ad_card_description = document.createElement("p")
@@ -191,7 +221,7 @@ function addAdFields() {
 
             onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
                 let user = snapshot.val()
-                if (user.role == "admin") {
+                if (user.role == "admin" || ad.created_by == auth.currentUser.uid) {
 
                     ad_card_footer.innerHTML = `${getRelativeTime(ad.created_at)} <b style="position: absolute; right: 15px;">${ad.email}</b>`
 
