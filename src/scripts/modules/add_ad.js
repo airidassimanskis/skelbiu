@@ -31,7 +31,7 @@ function addAdFields() {
         if (user.role == "admin") {
             adminPanel()
         }
-})
+    })
 
     onValue(ref(database, "skelbimai/"), (snapshot) => {
         let ads = snapshot.val()
@@ -195,7 +195,7 @@ function addAdFields() {
             let ad = ads[key]
 
             let ad_display_container = document.createElement("div")
-            ad_display_container.classList = ""
+            ad_display_container.classList = "mb-5"
 
             let ad_card_div = document.createElement("div")
             ad_card_div.classList = "card m-3"
@@ -321,14 +321,83 @@ function addAdFields() {
                 }
             })
 
+            // comment function
+            let ad_comment_body = document.createElement("ul")
+            ad_comment_body.classList = "list-group"
+
+            let ad_comment_input = document.createElement("input")
+            ad_comment_input.placeholder = "Your comment"
+            ad_comment_input.classList = "list-group-item"
+
+            let ad_comment_input_submit = document.createElement("button")
+            ad_comment_input_submit.classList = "btn btn-success"
+            ad_comment_input_submit.innerHTML = "Comment"
+
+            ad_comment_body.appendChild(ad_comment_input)
+            ad_comment_body.appendChild(ad_comment_input_submit)
+
+            ad_comment_input_submit.addEventListener("click", () => {
+                if (ad_comment_input.value.trim().length > 30) {
+                    alertify.error("Comment is too long. Maximum amount of characters is 30")
+                    return
+                } else {
+                    push(ref(database, "skelbimai/" + key + "/komentarai/"), {
+                        content: ad_comment_input.value,
+                        created_by: auth.currentUser.uid
+                    })
+                }
+            })
+
+            onValue(ref(database, "skelbimai/" + key + "/komentarai/"), (snapshot) => {
+                let comment = snapshot.val()
+                let commentsRemove = ad_comment_body.querySelectorAll(".ad-comment-li")
+                
+                // clear comments so it doesn't append on top of each other
+                for (let comrem of commentsRemove){
+                    comrem.remove()
+                }
+
+                for (let c in comment) {
+                    let ad_comment_li = document.createElement("li")
+                    ad_comment_li.classList = "list-group-item ad-comment-li"
+
+                    let ad_comment_li_p = document.createElement("p")
+                    ad_comment_li_p.classList = "m-0 ad-comment-li-p"
+                    ad_comment_li_p.textContent = `Anonymous: ${comment[c].content}`
+                    
+                    onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
+                        let user = snapshot.val()
+                        if (user.role == "admin" || ad.created_by == auth.currentUser.uid) {
+                            let admin_delete_comment = document.createElement("button")
+                            admin_delete_comment.classList = "admin-delete-comment-btn btn btn-danger"
+                            ad_comment_li.appendChild(admin_delete_comment)
+                            
+                            function deleteComment() {
+                                remove(ref(database, "skelbimai/" + key + "/komentarai/" + c))
+                            }
+                            
+                            admin_delete_comment.addEventListener('click', deleteComment)
+                        }
+                    })
+
+                    ad_comment_li.appendChild(ad_comment_li_p)
+                    ad_comment_body.appendChild(ad_comment_li)
+                }
+
+
+            })
+
             ad_card_div.appendChild(ad_card_body)
             ad_card_body.appendChild(ad_card_title)
             ad_card_body.appendChild(ad_card_description)
             ad_card_body.appendChild(ad_card_phone)
             ad_card_body.appendChild(ad_card_price)
             ad_card_div.appendChild(ad_card_footer)
+            ad_card_div.appendChild(ad_comment_body)
             container.appendChild(ad_card_div)
             container.appendChild(ad_display_container)
+
+
         }
     })
 

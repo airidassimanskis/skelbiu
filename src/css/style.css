@@ -16,15 +16,15 @@
     margin: auto;
 }
 
-.alertify-notifier{
+.alertify-notifier {
     text-align: center;
 }
 
-.admin-panel-div{
+.admin-panel-div {
     padding-bottom: 250px;
 }
 
-.admin-users{
+.admin-users {
     display: flex;
     width: 400px;
     flex-direction: column;
@@ -36,7 +36,8 @@
     overflow-y: auto;
     height: 268px;
 }
-.admin-users th{
+
+.admin-users th {
     outline-style: solid;
     outline-width: 1px;
     outline-color: #000000;
@@ -46,7 +47,7 @@
     border-radius: 5px;
 }
 
-.admin-users button{
+.admin-users button {
     float: right;
 }
 
@@ -59,32 +60,34 @@
     width: 60%;
 }
 
-.nav-btn{
+.nav-btn {
     width: 70px;
 }
 
-.favorite-btn{
+.ad-comment-li-p {
+    padding-left: 20px;
+}
+
+.favorite-btn {
     position: absolute;
     left: 15px;
     top: 15px;
     width: 30px;
     height: 30px;
-    clip-path: polygon(
-      50% 0%,
-      61% 35%,
-      98% 35%,
-      68% 57%,
-      79% 91%,
-      50% 70%,
-      21% 91%,
-      32% 57%,
-      2% 35%,
-      39% 35%
-    );
+    clip-path: polygon(50% 0%,
+            61% 35%,
+            98% 35%,
+            68% 57%,
+            79% 91%,
+            50% 70%,
+            21% 91%,
+            32% 57%,
+            2% 35%,
+            39% 35%);
     border: none;
 }
 
-.admin-delete-ad-btn{
+.admin-delete-ad-btn {
     position: absolute;
     left: 15px;
     top: 15px;
@@ -94,14 +97,28 @@
     background-color: red;
 }
 
-.card-title{
+
+/* COMMENT DELETE BUTTON ONLY */
+/* COMMENT DELETE BUTTON ONLY */
+/* COMMENT DELETE BUTTON ONLY */
+.admin-delete-comment-btn {
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    width: 25px;
+    height: 25px;
+    clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);
+    background-color: red;
+}
+
+.card-title {
     margin-left: 35px;
 }
 
-.your-favs-li{
+.your-favs-li {
     font-size: 20px;
 }
 
-.edit-btn{
+.edit-btn {
     margin-left: 5px;
 }
