@@ -133,12 +133,16 @@ function addAdFields() {
                 alertify.error("All fields are required. Please fill in all the fields.")
                 return
             }
-            if (ad_title.value.trim().length > 20 || ad_phone.value.trim().length > 20) {
-                alertify.error("Title or Phone number is too long. Maximum amount of characters is 20.")
+            if (ad_title.value.trim().length > 50) {
+                alertify.error("Title is too long. Maximum amount of characters is 50.")
+                return
+            }
+            if (ad_phone.value.trim().length > 20) {
+                alertify.error("Phone number is too long. Maximum amount of characters is 20.")
                 return
             }
             if (ad_description.value.trim().length > 300) {
-                alertify.error("Description is too long. Maximum amount of characters is 00")
+                alertify.error("Description is too long. Maximum amount of characters is 300")
                 return
             }
             if (ad_price.value.trim().length > 6) {
@@ -337,14 +341,15 @@ function addAdFields() {
             ad_comment_body.appendChild(ad_comment_input_submit)
 
             ad_comment_input_submit.addEventListener("click", () => {
-                if (ad_comment_input.value.trim().length > 30) {
-                    alertify.error("Comment is too long. Maximum amount of characters is 30")
+                if (ad_comment_input.value.trim().length > 80) {
+                    alertify.error("Comment is too long. Maximum amount of characters is 80")
                     return
                 } else {
                     push(ref(database, "skelbimai/" + key + "/komentarai/"), {
                         content: ad_comment_input.value,
                         created_by: auth.currentUser.uid
                     })
+                    window.location.reload()
                 }
             })
 
@@ -374,6 +379,7 @@ function addAdFields() {
                             
                             function deleteComment() {
                                 remove(ref(database, "skelbimai/" + key + "/komentarai/" + c))
+                                window.location.reload()
                             }
                             
                             admin_delete_comment.addEventListener('click', deleteComment)
