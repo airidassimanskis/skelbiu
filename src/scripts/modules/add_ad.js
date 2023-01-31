@@ -212,244 +212,238 @@ function addAdFields() {
             }
         })
 
-        // // filter by city
-        // let city_filter = document.createElement("select")
-        // city_filter.classList = "form-control m-auto w-50"
-
-        // let city_filter_option = document.createElement('option')
-        // city_filter_option.innerHTML = "All"
-        // city_filter.appendChild(city_filter_option)
-
-        // for (let c in cities) {
-        //     let city_filter_option = document.createElement('option')
-        //     city_filter_option.innerHTML = cities[c]
-        //     city_filter.appendChild(city_filter_option)
-        // }
-
-
-        // current_posts_text.appendChild(city_filter)
         current_posts_text.appendChild(category_filter)
+
 
 
         let ads_container = document.createElement("div")
         ads_container.classList = "ads-container"
 
-        category_filter.addEventListener("change", function() {
+        category_filter.addEventListener("change", function () {
             ads_container.innerHTML = ""
             your_favs_ul.innerHTML = ""
-            let selectedCategory = category_filter.value;
-            let filteredAds = {};
+            let selectedCategory = category_filter.value
+            let filteredAds = {}
             for (let key in ads) {
                 let ad = ads[key]
                 if (selectedCategory == "All" || ad.category == selectedCategory) {
                     filteredAds[key] = ad
+                    actuallyAdAds(filteredAds[key], key)
+                }
+            }
 
-                    let ad_card_div = document.createElement("div")
-                    ad_card_div.classList = "card m-3"
+        })
 
-                    let ad_card_body = document.createElement("div")
-                    ad_card_body.classList = "card-body"
+        for (let key in ads) {
+            actuallyAdAds(ads[key], key)
+        }
 
-                    // favorite button func
-                    let ad_card_title = document.createElement("h4")
-                    ad_card_title.classList = "card-title"
-                    ad_card_title.innerHTML = `${ad.title}<b> • ${ad.category} • ${ad.city}</b>`
-                    ad_card_title.id = key
+        function actuallyAdAds(ad, key) {
 
-                    onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
-                        let user = snapshot.val()
+            let ad_card_div = document.createElement("div")
+            ad_card_div.classList = "card m-3"
 
-                        // favorite button func
-                        let ad_favorite_btn = document.createElement("button")
-                        if (user.favorites && user.favorites[key] && user.favorites[key].favorited_ad) {
-                            ad_favorite_btn.classList = "favorite-btn btn bg-warning"
-                            ad_favorite_btn.addEventListener("click", () => {
-                                remove(ref(database, "users/" + auth.currentUser.uid + "/favorites/" + key))
-                            })
-                        } else {
-                            ad_favorite_btn.classList = "favorite-btn btn bg-secondary"
-                            ad_favorite_btn.addEventListener("click", () => {
-                                set(ref(database, "users/" + auth.currentUser.uid + "/favorites/" + key), {
-                                    favorited_ad: true
-                                })
-                            })
-                        }
-                        ad_card_title.appendChild(ad_favorite_btn)
+            let ad_card_body = document.createElement("div")
+            ad_card_body.classList = "card-body"
 
-                        if (ad.created_by == auth.currentUser.uid || user.role == "admin") {
-                            ad_favorite_btn.hidden = true
+            // favorite button func
+            let ad_card_title = document.createElement("h4")
+            ad_card_title.classList = "card-title"
+            ad_card_title.innerHTML = `${ad.title}<b> • ${ad.category} • ${ad.city}</b>`
+            ad_card_title.id = key
 
-                            // edit own ad func
-                            let ad_edit_btn = document.createElement("a")
-                            ad_edit_btn.classList = "edit-btn btn btn-sm bg-primary"
-                            ad_edit_btn.innerHTML = "Edit"
-                            ad_edit_btn.href = "#ad_title"
+            onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
+                let user = snapshot.val()
 
-                            ad_edit_btn.addEventListener("click", () => {
-                                ad_title.value = ad.title
-                                ad_description.value = ad.description
-                                ad_city_select.value = ad.city
-                                ad_price.value = ad.price
-                                ad_category_select.value = ad.category
-                                ad_phone.value = ad.phone
-
-                                ad_submit.textContent = "Edit Ad"
-
-                                ad_submit.addEventListener("click", () => {
-                                    update(ref(database, "skelbimai/" + key), {
-                                        title: ad_title.value,
-                                        description: ad_description.value,
-                                        city: ad_city_select.value,
-                                        category: ad_category_select.value,
-                                        price: ad_price.value,
-                                        phone: ad_phone.value,
-                                        email: ad_email.placeholder,
-                                    })
-                                    remove(ref(database, "skelbimai/" + key))
-                                    window.location.reload()
-                                })
-                            })
-                            ad_card_title.appendChild(ad_edit_btn)
-                        }
-
+                // favorite button func
+                let ad_favorite_btn = document.createElement("button")
+                if (user.favorites && user.favorites[key] && user.favorites[key].favorited_ad) {
+                    ad_favorite_btn.classList = "favorite-btn btn bg-warning"
+                    ad_favorite_btn.addEventListener("click", () => {
+                        remove(ref(database, "users/" + auth.currentUser.uid + "/favorites/" + key))
                     })
-
-                    let ad_card_description = document.createElement("p")
-                    ad_card_description.classList = "card-text"
-                    ad_card_description.textContent = ad.description
-
-                    let ad_card_phone = document.createElement("h4")
-                    ad_card_phone.classList = "card-text"
-                    ad_card_phone.innerHTML = '<i class="bi bi-phone"></i>' + ad.phone
-
-                    let ad_card_price = document.createElement("h4")
-                    ad_card_price.classList = "card-text"
-                    ad_card_price.innerHTML = '<i class="bi bi-currency-dollar"></i>' + formatCurrency(ad.price)
-
-                    let ad_card_footer = document.createElement("div")
-                    ad_card_footer.classList = "card-footer text-muted"
-                    ad_card_footer.textContent = getRelativeTime(ad.created_at)
-
-                    // remove ad func
-                    onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
-                        let user = snapshot.val()
-                        if (user.role == "admin" || ad.created_by == auth.currentUser.uid) {
-
-                            ad_card_footer.innerHTML = `${getRelativeTime(ad.created_at)} <b style="position: absolute; right: 15px;">${ad.email}</b>`
-
-                            let admin_delete_ad = document.createElement("button")
-                            admin_delete_ad.classList = "admin-delete-ad-btn btn btn-danger"
-                            ad_card_title.appendChild(admin_delete_ad)
-
-                            function deleteAd() {
-                                remove(ref(database, "skelbimai/" + key))
-                                window.location.reload()
-                            }
-
-                            admin_delete_ad.addEventListener('click', deleteAd)
-
-
-
-                        }
+                } else {
+                    ad_favorite_btn.classList = "favorite-btn btn bg-secondary"
+                    ad_favorite_btn.addEventListener("click", () => {
+                        set(ref(database, "users/" + auth.currentUser.uid + "/favorites/" + key), {
+                            favorited_ad: true
+                        })
                     })
+                }
+                ad_card_title.appendChild(ad_favorite_btn)
 
+                if (ad.created_by == auth.currentUser.uid || user.role == "admin") {
+                    ad_favorite_btn.hidden = true
 
-                    // your favorites
+                    // edit own ad func
+                    let ad_edit_btn = document.createElement("a")
+                    ad_edit_btn.classList = "edit-btn btn btn-sm bg-primary"
+                    ad_edit_btn.innerHTML = "Edit"
+                    ad_edit_btn.href = "#ad_title"
 
-                    onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
-                        let user = snapshot.val()
+                    ad_edit_btn.addEventListener("click", () => {
+                        ad_title.value = ad.title
+                        ad_description.value = ad.description
+                        ad_city_select.value = ad.city
+                        ad_price.value = ad.price
+                        ad_category_select.value = ad.category
+                        ad_phone.value = ad.phone
 
-                        if (user.favorites && user.favorites[key] && user.favorites[key].favorited_ad) {
-                            let your_favs_li = document.createElement("li")
-                            your_favs_li.classList = "list-group-item your-favs-li"
-                            your_favs_li.innerHTML = `<a href="#${key}">${ad.title}<b> • ${ad.category} • ${ad.city}</b></a>`
+                        ad_submit.textContent = "Edit Ad"
 
-                            your_favs_ul.appendChild(your_favs_li)
-                        }
-                    })
-
-                    // comment function
-                    let ad_comment_body = document.createElement("ul")
-                    ad_comment_body.classList = "list-group"
-
-                    let ad_comment_input = document.createElement("input")
-                    ad_comment_input.placeholder = "Your comment"
-                    ad_comment_input.classList = "list-group-item"
-
-                    let ad_comment_input_submit = document.createElement("button")
-                    ad_comment_input_submit.classList = "btn btn-success"
-                    ad_comment_input_submit.innerHTML = "Comment"
-
-                    ad_comment_body.appendChild(ad_comment_input)
-                    ad_comment_body.appendChild(ad_comment_input_submit)
-
-                    ad_comment_input_submit.addEventListener("click", () => {
-                        if (ad_comment_input.value.trim().length > 80) {
-                            alertify.error("Comment is too long. Maximum amount of characters is 80")
-                            return
-                        } else {
-                            push(ref(database, "skelbimai/" + key + "/komentarai/"), {
-                                content: ad_comment_input.value,
-                                created_by: auth.currentUser.uid
+                        ad_submit.addEventListener("click", () => {
+                            update(ref(database, "skelbimai/" + key), {
+                                title: ad_title.value,
+                                description: ad_description.value,
+                                city: ad_city_select.value,
+                                category: ad_category_select.value,
+                                price: ad_price.value,
+                                phone: ad_phone.value,
+                                email: ad_email.placeholder,
                             })
+                            remove(ref(database, "skelbimai/" + key))
                             window.location.reload()
-                        }
+                        })
                     })
+                    ad_card_title.appendChild(ad_edit_btn)
+                }
 
-                    onValue(ref(database, "skelbimai/" + key + "/komentarai/"), (snapshot) => {
-                        let comment = snapshot.val()
-                        let commentsRemove = ad_comment_body.querySelectorAll(".ad-comment-li")
+            })
 
-                        // clear comments so it doesn't append on top of each other
-                        for (let comrem of commentsRemove) {
-                            comrem.remove()
-                        }
+            let ad_card_description = document.createElement("p")
+            ad_card_description.classList = "card-text"
+            ad_card_description.textContent = ad.description
 
-                        for (let c in comment) {
-                            let ad_comment_li = document.createElement("li")
-                            ad_comment_li.classList = "list-group-item ad-comment-li"
+            let ad_card_phone = document.createElement("h4")
+            ad_card_phone.classList = "card-text"
+            ad_card_phone.innerHTML = '<i class="bi bi-phone"></i>' + ad.phone
 
-                            let ad_comment_li_p = document.createElement("p")
-                            ad_comment_li_p.classList = "m-0 ad-comment-li-p"
-                            ad_comment_li_p.textContent = `Anonymous: ${comment[c].content}`
+            let ad_card_price = document.createElement("h4")
+            ad_card_price.classList = "card-text"
+            ad_card_price.innerHTML = '<i class="bi bi-currency-dollar"></i>' + formatCurrency(ad.price)
 
-                            onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
-                                let user = snapshot.val()
-                                if (user.role == "admin" || ad.created_by == auth.currentUser.uid) {
-                                    let admin_delete_comment = document.createElement("button")
-                                    admin_delete_comment.classList = "admin-delete-comment-btn btn btn-danger"
-                                    ad_comment_li.appendChild(admin_delete_comment)
+            let ad_card_footer = document.createElement("div")
+            ad_card_footer.classList = "card-footer text-muted"
+            ad_card_footer.textContent = getRelativeTime(ad.created_at)
 
-                                    function deleteComment() {
-                                        remove(ref(database, "skelbimai/" + key + "/komentarai/" + c))
-                                        window.location.reload()
-                                    }
+            // remove ad func
+            onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
+                let user = snapshot.val()
+                if (user.role == "admin" || ad.created_by == auth.currentUser.uid) {
 
-                                    admin_delete_comment.addEventListener('click', deleteComment)
-                                }
-                            })
+                    ad_card_footer.innerHTML = `${getRelativeTime(ad.created_at)} <b style="position: absolute; right: 15px;">${ad.email}</b>`
 
-                            ad_comment_li.appendChild(ad_comment_li_p)
-                            ad_comment_body.appendChild(ad_comment_li)
-                        }
+                    let admin_delete_ad = document.createElement("button")
+                    admin_delete_ad.classList = "admin-delete-ad-btn btn btn-danger"
+                    ad_card_title.appendChild(admin_delete_ad)
 
+                    function deleteAd() {
+                        remove(ref(database, "skelbimai/" + key))
+                        window.location.reload()
+                    }
 
-                    })
+                    admin_delete_ad.addEventListener('click', deleteAd)
 
-                    ad_card_div.appendChild(ad_card_body)
-                    ad_card_body.appendChild(ad_card_title)
-                    ad_card_body.appendChild(ad_card_description)
-                    ad_card_body.appendChild(ad_card_phone)
-                    ad_card_body.appendChild(ad_card_price)
-                    ad_card_div.appendChild(ad_card_footer)
-                    ad_card_div.appendChild(ad_comment_body)
-                    ads_container.appendChild(ad_card_div)
-                    container.appendChild(ads_container)
 
 
                 }
-            }
-        })
+            })
+
+
+            // your favorites
+
+            onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
+                let user = snapshot.val()
+
+                if (user.favorites && user.favorites[key] && user.favorites[key].favorited_ad) {
+                    let your_favs_li = document.createElement("li")
+                    your_favs_li.classList = "list-group-item your-favs-li"
+                    your_favs_li.innerHTML = `<a href="#${key}">${ad.title}<b> • ${ad.category} • ${ad.city}</b></a>`
+
+                    your_favs_ul.appendChild(your_favs_li)
+                }
+            })
+
+            // comment function
+            let ad_comment_body = document.createElement("ul")
+            ad_comment_body.classList = "list-group"
+
+            let ad_comment_input = document.createElement("input")
+            ad_comment_input.placeholder = "Your comment"
+            ad_comment_input.classList = "list-group-item"
+
+            let ad_comment_input_submit = document.createElement("button")
+            ad_comment_input_submit.classList = "btn btn-success"
+            ad_comment_input_submit.innerHTML = "Comment"
+
+            ad_comment_body.appendChild(ad_comment_input)
+            ad_comment_body.appendChild(ad_comment_input_submit)
+
+            ad_comment_input_submit.addEventListener("click", () => {
+                if (ad_comment_input.value.trim().length > 80) {
+                    alertify.error("Comment is too long. Maximum amount of characters is 80")
+                    return
+                } else {
+                    push(ref(database, "skelbimai/" + key + "/komentarai/"), {
+                        content: ad_comment_input.value,
+                        created_by: auth.currentUser.uid
+                    })
+                    window.location.reload()
+                }
+            })
+
+            onValue(ref(database, "skelbimai/" + key + "/komentarai/"), (snapshot) => {
+                let comment = snapshot.val()
+                let commentsRemove = ad_comment_body.querySelectorAll(".ad-comment-li")
+
+                // clear comments so it doesn't append on top of each other
+                for (let comrem of commentsRemove) {
+                    comrem.remove()
+                }
+
+                for (let c in comment) {
+                    let ad_comment_li = document.createElement("li")
+                    ad_comment_li.classList = "list-group-item ad-comment-li"
+
+                    let ad_comment_li_p = document.createElement("p")
+                    ad_comment_li_p.classList = "m-0 ad-comment-li-p"
+                    ad_comment_li_p.textContent = `Anonymous: ${comment[c].content}`
+
+                    onValue(ref(database, "users/" + auth.currentUser.uid), (snapshot) => {
+                        let user = snapshot.val()
+                        if (user.role == "admin" || ad.created_by == auth.currentUser.uid) {
+                            let admin_delete_comment = document.createElement("button")
+                            admin_delete_comment.classList = "admin-delete-comment-btn btn btn-danger"
+                            ad_comment_li.appendChild(admin_delete_comment)
+
+                            function deleteComment() {
+                                remove(ref(database, "skelbimai/" + key + "/komentarai/" + c))
+                                window.location.reload()
+                            }
+
+                            admin_delete_comment.addEventListener('click', deleteComment)
+                        }
+                    })
+
+                    ad_comment_li.appendChild(ad_comment_li_p)
+                    ad_comment_body.appendChild(ad_comment_li)
+                }
+
+
+            })
+
+            ad_card_div.appendChild(ad_card_body)
+            ad_card_body.appendChild(ad_card_title)
+            ad_card_body.appendChild(ad_card_description)
+            ad_card_body.appendChild(ad_card_phone)
+            ad_card_body.appendChild(ad_card_price)
+            ad_card_div.appendChild(ad_card_footer)
+            ad_card_div.appendChild(ad_comment_body)
+            ads_container.appendChild(ad_card_div)
+            container.appendChild(ads_container)
+
+
+        }
     })
 }
 
